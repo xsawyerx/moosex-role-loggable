@@ -70,12 +70,28 @@ no Moose::Role;
 
 __END__
 
+=head1 SYNOPSIS
+
+    package My::Object;
+
+    use Moose;
+    with 'MooseX::Role::Loggable';
+
+    sub do_this {
+        my $self = shift;
+        $self->set_prefix('[do_this] ');
+        $self->log_debug('starting...');
+        ...
+        $self->log_debug('more stuff');
+    }
+
 =head1 DESCRIPTION
 
 This is a role to provide logging ability to whoever consumes it using
 L<Log::Dispatchouli>.
 
-Once you consume this role, you have the following attributes and methods.
+Once you consume this role, you have the attributes and methods documented
+below.
 
 =head1 ATTRIBUTES
 
