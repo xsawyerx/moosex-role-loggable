@@ -1,3 +1,11 @@
+0.003   25.04.11
+        * Adding log_file, log_path, log_pid, log_fail_fatal, log_muted
+          and log_quiet_fatal.
+        * Added set_debug and clear_debug.
+        * Added clear_prefix, set_muted, clear_muted.
+        * The method debug() no longer carries a trigger and the boolean
+          is instead propagated to the Log::Dispatchouli object.
+
 0.002   22.03.11
         * Add a synopsis.
 
