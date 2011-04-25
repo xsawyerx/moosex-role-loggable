@@ -47,7 +47,9 @@ has log_to_stderr => (
 has logger => (
     is         => 'ro',
     isa        => 'Log::Dispatchouli',
-    handles    => [ 'log', 'log_fatal', 'log_debug', 'set_prefix' ],
+    handles    => [ qw/
+        log log_fatal log_debug set_prefix clear_prefix set_muted clear_muted
+    / ],
     lazy_build => 1,
 );
 
@@ -163,4 +165,16 @@ Log a message and die.
 =head2 set_prefix
 
 Set a prefix for all next messages.
+
+=head2 clear_prefix
+
+Clears the prefix for all next messages.
+
+=head2 set_muted
+
+Sets the mute property, which makes only fatal messages logged.
+
+=head2 clear_muted
+
+Clears the mute property.
 
