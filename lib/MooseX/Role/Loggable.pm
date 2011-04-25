@@ -43,6 +43,43 @@ has log_to_stderr => (
     default => 0,
 );
 
+has log_file => (
+    is        => 'ro',
+    isa       => 'Str',
+    predicate => 'has_log_file',
+);
+
+has log_path => (
+    is        => 'ro',
+    isa       => 'Str',
+    predicate => 'has_log_path',
+);
+
+has log_pid => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 1,
+);
+
+has log_fail_fatal => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 1,
+);
+
+has log_muted => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
+
+has log_quiet_fatal => (
+    is      => 'ro',
+    isa     => 'Str|ArrayRef',
+    default => 'stderr',
+);
+
+
 has logger => (
     is         => 'ro',
     isa        => 'Log::Dispatchouli',
@@ -54,14 +91,28 @@ has logger => (
 );
 
 sub _build_logger {
-    my $self   = shift;
+    my $self     = shift;
+    my %optional = ();
+
+    foreach my $option ( qw/log_file log_path/ ) {
+        my $method = "has_$option";
+        if ( $self->$method ) {
+            $optional{$option} = $self->$option;
+        }
+    }
+
     my $logger = Log::Dispatchouli->new( {
-        debug     => $self->debug,
-        ident     => $self->logger_ident,
-        facility  => $self->logger_facility,
-        to_file   => $self->log_to_file,
-        to_stdout => $self->log_to_stdout,
-        to_stderr => $self->log_to_stderr,
+        debug       => $self->debug,
+        ident       => $self->logger_ident,
+        facility    => $self->logger_facility,
+        to_file     => $self->log_to_file,
+        to_stdout   => $self->log_to_stdout,
+        to_stderr   => $self->log_to_stderr,
+        log_pid     => $self->log_pid,
+        fail_fatal  => $self->log_fail_fatal,
+        muted       => $self->log_muted,
+        quiet_fatal => $self->log_quiet_fatal,
+        %optional,
     } );
 
     return $logger;
@@ -86,6 +137,7 @@ __END__
         $self->log_debug('starting...');
         ...
         $self->log_debug('more stuff');
+        $self->clear_prefix;
     }
 
 =head1 DESCRIPTION
@@ -141,6 +193,44 @@ Default: B<no>.
 A boolean that determines if the logger would log to STDERR.
 
 Default: B<no>.
+
+=head2 log_file
+
+The leaf name for the log file.
+
+Default: B<undef>
+
+=head2 log_path
+
+The path for the log file.
+
+Default: B<undef>
+
+=head2 log_pid
+
+Whether to append the PID to the log filename.
+
+Default: B<yes>
+
+=head2 log_fail_fatal
+
+Whether failure to log is fatal.
+
+Default: B<yes>
+
+=head2 log_muted
+
+Whether only fatals are logged.
+
+Default: B<no>
+
+=head2 log_quiet_fatal
+
+From L<Log::Dispatchouli>:
+I<'stderr' or 'stdout' or an arrayref of zero, one, or both fatal log messages
+will not be logged to these>.
+
+Default: B<stderr>
 
 =head2 logger
 
