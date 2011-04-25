@@ -48,7 +48,8 @@ has logger => (
     is         => 'ro',
     isa        => 'Log::Dispatchouli',
     handles    => [ qw/
-        log log_fatal log_debug set_prefix clear_prefix set_muted clear_muted
+        log log_fatal log_debug
+        set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
     / ],
     lazy_build => 1,
 );
@@ -161,6 +162,14 @@ Log a message only if in debug mode.
 =head2 log_fatal
 
 Log a message and die.
+
+=head2 set_debug
+
+Set the debug flag.
+
+=head2 clear_debug
+
+Clear the debug flag.
 
 =head2 set_prefix
 
