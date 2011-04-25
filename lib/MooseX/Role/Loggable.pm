@@ -11,7 +11,6 @@ has debug => (
     is      => 'ro',
     isa     => 'Bool',
     default => 0,
-    trigger => sub { shift->logger->set_debug(shift) },
 );
 
 has logger_facility => (
@@ -57,6 +56,7 @@ has logger => (
 sub _build_logger {
     my $self   = shift;
     my $logger = Log::Dispatchouli->new( {
+        debug     => $self->debug,
         ident     => $self->logger_ident,
         facility  => $self->logger_facility,
         to_file   => $self->log_to_file,
