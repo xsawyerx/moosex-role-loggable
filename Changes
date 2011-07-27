@@ -1,3 +1,7 @@
+0.004   27.07.11
+        * Use Any::Moose instead of Moose directly.
+        (this makes it possible to use with Moose or Mouse)
+
 0.003   25.04.11
         * Adding log_file, log_path, log_pid, log_fail_fatal, log_muted
           and log_quiet_fatal.
