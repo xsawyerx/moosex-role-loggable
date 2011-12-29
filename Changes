@@ -1,6 +1,7 @@
 0.005   29.12.11
         * Add log_fields method to allow to easily propagate preferences
           to other objects.
+        * Change tests to use Any::Moose.
 
 0.004   27.07.11
         * Use Any::Moose instead of Moose directly.
