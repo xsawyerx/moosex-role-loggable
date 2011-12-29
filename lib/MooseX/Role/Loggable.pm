@@ -118,7 +118,7 @@ sub _build_logger {
     return $logger;
 }
 
-sub _build_log_fields {
+sub log_fields {
     my $self  = shift;
     my @attrs = qw/
         debug logger_facility logger_ident
