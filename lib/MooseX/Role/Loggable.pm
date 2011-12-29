@@ -126,7 +126,7 @@ sub log_fields {
         log_file log_path log_pid log_fail_fatal log_muted log_quiet_fatal
     /;
 
-    return map { $_ => $self->$_ } @attrs;
+    return map { $_ => $self->$_ } grep { defined $self->$_ } @attrs;
 };
 
 1;
