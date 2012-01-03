@@ -1,3 +1,6 @@
+0.007   03.01.12
+        * Finally remove prereq of Moose!
+
 0.006   03.01.12
         * Adding Sys::Syslog 0.16 as a prereq.
 
