@@ -1,3 +1,6 @@
+0.006   03.01.12
+        * Adding Sys::Syslog 0.16 as a prereq.
+
 0.005   29.12.11
         * Add log_fields method to allow to easily propagate preferences
           to other objects.
