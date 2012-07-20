@@ -6,13 +6,13 @@ use Test::More tests => 8;
 
 {
     package Bar;
-    use Any::Moose;
+    use Moo;
     with 'MooseX::Role::Loggable';
 }
 
 {
     package Foo;
-    use Any::Moose;
+    use Moo;
     with 'MooseX::Role::Loggable';
 
     sub bar { Bar->new( shift->log_fields ) }

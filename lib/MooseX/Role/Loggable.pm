@@ -3,91 +3,90 @@ use warnings;
 package MooseX::Role::Loggable;
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
-use Any::Moose 'Role';
+use Moo::Role;
 use Log::Dispatchouli;
-
-use namespace::autoclean;
 
 has debug => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    #isa     => 'Bool',
+    default => sub {0},
 );
 
 has logger_facility => (
     is      => 'ro',
-    isa     => 'Str',
-    default => 'local6',
+    #isa     => 'Str',
+    default => sub {'local6'},
 );
 
 has logger_ident => (
     is      => 'ro',
-    isa     => 'Str',
-    default => __PACKAGE__,
+    #isa     => 'Str',
+    default => sub {__PACKAGE__},
 );
 
 has log_to_file => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    #isa     => 'Bool',
+    default => sub {0},
 );
 
 has log_to_stdout => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    #isa     => 'Bool',
+    default => sub {0},
 );
 
 has log_to_stderr => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    #isa     => 'Bool',
+    default => sub {0},
 );
 
 has log_file => (
     is        => 'ro',
-    isa       => 'Str',
+    #isa       => 'Str',
     predicate => 'has_log_file',
 );
 
 has log_path => (
     is        => 'ro',
-    isa       => 'Str',
+    #isa       => 'Str',
     predicate => 'has_log_path',
 );
 
 has log_pid => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 1,
+    #isa     => 'Bool',
+    default => sub {1},
 );
 
 has log_fail_fatal => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 1,
+    #isa     => 'Bool',
+    default => sub {1},
 );
 
 has log_muted => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    #isa     => 'Bool',
+    default => sub {0},
 );
 
 has log_quiet_fatal => (
     is      => 'ro',
-    isa     => 'Str|ArrayRef',
-    default => 'stderr',
+    #isa     => 'Str|ArrayRef',
+    default => sub {'stderr'},
 );
 
 has logger => (
-    is         => 'ro',
-    isa        => 'Log::Dispatchouli',
-    handles    => [ qw/
+    is      => 'ro',
+    #isa     => 'Log::Dispatchouli',
+    handles => [ qw/
         log log_fatal log_debug
         set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
     / ],
-    lazy_build => 1,
+    lazy    => 1,
+    builder => '_build_logger',
 );
 
 sub _build_logger {

@@ -6,7 +6,7 @@ use Test::More tests => 5;
 
 {
     package Foo;
-    use Any::Moose;
+    use Moo;
     with 'MooseX::Role::Loggable';
 }
 
