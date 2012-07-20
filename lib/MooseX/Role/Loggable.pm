@@ -83,7 +83,7 @@ has log_quiet_fatal => (
 );
 
 has logger => (
-    is      => 'ro',
+    is      => 'lazy',
     isa     => sub {
         is_Object($_[0]) and ref $_[0] eq 'Log::Dispatchouli'
             or die "$_[0] must be a Log::Dispatchouli object"
@@ -92,8 +92,6 @@ has logger => (
         log log_fatal log_debug
         set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
     / ],
-    lazy    => 1,
-    builder => '_build_logger',
 );
 
 sub _build_logger {
