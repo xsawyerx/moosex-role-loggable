@@ -77,7 +77,8 @@ has log_muted => (
 has log_quiet_fatal => (
     is      => 'ro',
     isa     => quote_sub(q{
-        $_[0] || ( ref($_[0]) && ref($_[0]) eq ref([]) )
+        use Scalar::Util 'blessed';
+        $_[0] || ( blessed($_[0]) && $_[0]->isa( ref([]) ) )
             or die "$_[0] must be a string or arrayref"
     }),
     default => sub {'stderr'},
@@ -86,7 +87,8 @@ has log_quiet_fatal => (
 has logger => (
     is      => 'lazy',
     isa     => quote_sub(q{
-        ref($_[0]) && ref($_[0]) eq 'Log::Dispatchouli'
+        use Scalar::Util 'blessed';
+        blessed($_[0]) && $_[0]->isa('Log::Dispatchouli')
             or die "$_[0] must be a Log::Dispatchouli object";
 
         return $_[0];
