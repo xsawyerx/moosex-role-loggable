@@ -80,8 +80,8 @@ has log_muted => (
 has log_quiet_fatal => (
     is      => 'ro',
     isa     => quote_sub(q{
-        use Scalar::Util 'blessed';
-        $_[0] || ( blessed($_[0]) && $_[0]->isa( ref([]) ) )
+        use Safe::Isa;
+        $_[0] || $_[0]->$_isa( ref [] )
             or die "$_[0] must be a string or arrayref"
     }),
     default => sub {'stderr'},
@@ -90,8 +90,8 @@ has log_quiet_fatal => (
 has logger => (
     is      => 'lazy',
     isa     => quote_sub(q{
-        use Scalar::Util 'blessed';
-        blessed($_[0]) && $_[0]->isa('Log::Dispatchouli')
+        use Safe::Isa;
+        $_[0]->$_isa('Log::Dispatchouli')
             or die "$_[0] must be a Log::Dispatchouli object";
 
         return $_[0];
