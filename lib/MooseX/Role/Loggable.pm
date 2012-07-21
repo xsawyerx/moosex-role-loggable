@@ -7,9 +7,7 @@ use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Bool Str>;
 use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
-
-# FIXME: enable this when Moo fixes it
-# use namespace::autoclean;
+use namespace::autoclean;
 
 has debug => (
     is      => 'ro',
