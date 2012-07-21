@@ -4,7 +4,8 @@ package MooseX::Role::Loggable;
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
 use Moo::Role;
-use MooX::Types::MooseLike::Base qw<Bool Str is_Str is_ArrayRef is_Object>;
+use MooX::Types::MooseLike::Base qw<Bool Str>;
+use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
 
 has debug => (
@@ -75,19 +76,21 @@ has log_muted => (
 
 has log_quiet_fatal => (
     is      => 'ro',
-    isa     => sub {
-        is_Str($_[0]) || is_ArrayRef($_[0])
+    isa     => quote_sub(q{
+        $_[0] || ( ref($_[0]) && ref($_[0]) eq ref([]) )
             or die "$_[0] must be a string or arrayref"
-    },
+    }),
     default => sub {'stderr'},
 );
 
 has logger => (
     is      => 'lazy',
-    isa     => sub {
-        is_Object($_[0]) and ref $_[0] eq 'Log::Dispatchouli'
-            or die "$_[0] must be a Log::Dispatchouli object"
-    },
+    isa     => quote_sub(q{
+        ref($_[0]) && ref($_[0]) eq 'Log::Dispatchouli'
+            or die "$_[0] must be a Log::Dispatchouli object";
+
+        return $_[0];
+    }),
     handles => [ qw/
         log log_fatal log_debug
         set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
