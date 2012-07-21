@@ -146,7 +146,7 @@ __END__
 
     package My::Object;
 
-    use Moose;
+    use Moose; # or Moo
     with 'MooseX::Role::Loggable';
 
     sub do_this {
@@ -168,22 +168,23 @@ You can propagate your logging definitions to another object that uses
 L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
 
     package Parent;
-    use Any::Moose;
-    use MooseX::Role::Loggable; # picking Mouse or Moose
+    use Moo; # replaces Any::Moose and Mouse (and Moose)
+    use MooseX::Role::Loggable; # picking Moo or Moose
 
     has child => (
-        is         => 'ro',
-        isa        => 'Child',
-        lazy_build => 1,
+        is      => 'ro',
+        isa     => 'Child',
+        lazy    => 1,
+        builder => '_build_child',
     );
 
     sub _build_child {
         my $self = shift;
-
         return Child->new( $self->log_fields );
     }
 
-This module uses L<Any::Moose> so you can use it with L<Moose> or L<Mouse>.
+This module uses L<Moo> so it takes as little resources as it can by default,
+and can seamlessly work if you're using either L<Moo> or L<Moose>.
 
 =head1 ATTRIBUTES
 
