@@ -93,8 +93,6 @@ has logger => (
         use Safe::Isa;
         $_[0]->$_isa('Log::Dispatchouli')
             or die "$_[0] must be a Log::Dispatchouli object";
-
-        return $_[0];
     }),
     handles => [ qw/
         log log_fatal log_debug
