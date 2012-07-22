@@ -3,91 +3,99 @@ use warnings;
 package MooseX::Role::Loggable;
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
-use Any::Moose 'Role';
+use Moo::Role;
+use MooX::Types::MooseLike::Base qw<Bool Str>;
+use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
-
 use namespace::autoclean;
 
 has debug => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => sub {0},
 );
 
 has logger_facility => (
     is      => 'ro',
-    isa     => 'Str',
-    default => 'local6',
+    isa     => Str,
+    default => sub {'local6'},
 );
 
 has logger_ident => (
     is      => 'ro',
-    isa     => 'Str',
-    default => __PACKAGE__,
+    isa     => Str,
+    default => sub {__PACKAGE__},
 );
 
 has log_to_file => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => sub {0},
 );
 
 has log_to_stdout => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => sub {0},
 );
 
 has log_to_stderr => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => sub {0},
 );
 
 has log_file => (
     is        => 'ro',
-    isa       => 'Str',
+    isa       => Str,
     predicate => 'has_log_file',
 );
 
 has log_path => (
     is        => 'ro',
-    isa       => 'Str',
+    isa       => Str,
     predicate => 'has_log_path',
 );
 
 has log_pid => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 1,
+    isa     => Bool,
+    default => sub {1},
 );
 
 has log_fail_fatal => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 1,
+    isa     => Bool,
+    default => sub {1},
 );
 
 has log_muted => (
     is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => sub {0},
 );
 
 has log_quiet_fatal => (
     is      => 'ro',
-    isa     => 'Str|ArrayRef',
-    default => 'stderr',
+    isa     => quote_sub(q{
+        use Safe::Isa;
+        $_[0] || $_[0]->$_isa( ref [] )
+            or die "$_[0] must be a string or arrayref"
+    }),
+    default => sub {'stderr'},
 );
 
 has logger => (
-    is         => 'ro',
-    isa        => 'Log::Dispatchouli',
-    handles    => [ qw/
+    is      => 'lazy',
+    isa     => quote_sub(q{
+        use Safe::Isa;
+        $_[0]->$_isa('Log::Dispatchouli')
+            or die "$_[0] must be a Log::Dispatchouli object";
+    }),
+    handles => [ qw/
         log log_fatal log_debug
         set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
     / ],
-    lazy_build => 1,
 );
 
 sub _build_logger {
@@ -137,7 +145,7 @@ __END__
 
     package My::Object;
 
-    use Moose;
+    use Moose; # or Moo
     with 'MooseX::Role::Loggable';
 
     sub do_this {
@@ -159,22 +167,23 @@ You can propagate your logging definitions to another object that uses
 L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
 
     package Parent;
-    use Any::Moose;
-    use MooseX::Role::Loggable; # picking Mouse or Moose
+    use Moo; # replaces Any::Moose and Mouse (and Moose)
+    use MooseX::Role::Loggable; # picking Moo or Moose
 
     has child => (
-        is         => 'ro',
-        isa        => 'Child',
-        lazy_build => 1,
+        is      => 'ro',
+        isa     => 'Child',
+        lazy    => 1,
+        builder => '_build_child',
     );
 
     sub _build_child {
         my $self = shift;
-
         return Child->new( $self->log_fields );
     }
 
-This module uses L<Any::Moose> so you can use it with L<Moose> or L<Mouse>.
+This module uses L<Moo> so it takes as little resources as it can by default,
+and can seamlessly work if you're using either L<Moo> or L<Moose>.
 
 =head1 ATTRIBUTES
 
