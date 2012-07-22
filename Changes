@@ -1,3 +1,7 @@
+0.008   22.07.12
+        * Move to Moo instead of Any::Moose.
+        * Require Sys::Syslog 0.25.
+
 0.007   03.01.12
         * Finally remove prereq of Moose!
 
