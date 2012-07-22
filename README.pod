@@ -1,0 +1,206 @@
+=pod
+
+=head1 NAME
+
+MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatchouli
+
+=head1 VERSION
+
+version 0.008
+
+=head1 SYNOPSIS
+
+    package My::Object;
+
+    use Moose; # or Moo
+    with 'MooseX::Role::Loggable';
+
+    sub do_this {
+        my $self = shift;
+        $self->set_prefix('[do_this] ');
+        $self->log_debug('starting...');
+        ...
+        $self->log_debug('more stuff');
+        $self->clear_prefix;
+    }
+
+=head1 DESCRIPTION
+
+This is a role to provide logging ability to whoever consumes it using
+L<Log::Dispatchouli>. Once you consume this role, you have the attributes and
+methods documented below.
+
+You can propagate your logging definitions to another object that uses
+L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
+
+    package Parent;
+    use Moo; # replaces Any::Moose and Mouse (and Moose)
+    use MooseX::Role::Loggable; # picking Moo or Moose
+
+    has child => (
+        is      => 'ro',
+        isa     => 'Child',
+        lazy    => 1,
+        builder => '_build_child',
+    );
+
+    sub _build_child {
+        my $self = shift;
+        return Child->new( $self->log_fields );
+    }
+
+This module uses L<Moo> so it takes as little resources as it can by default,
+and can seamlessly work if you're using either L<Moo> or L<Moose>.
+
+=head1 ATTRIBUTES
+
+=head2 debug
+
+A boolean for whether you're in debugging mode or not.
+
+Default: B<no>.
+
+Read-only.
+
+=head2 logger_facility
+
+The facility the logger would use. This is useful for syslog.
+
+Default: B<local6>.
+
+=head2 logger_ident
+
+The ident the logger would use. This is useful for syslog.
+
+Default: B<MooseX::Role::Loggable>.
+
+Read-only.
+
+=head2 log_to_file
+
+A boolean that determines if the logger would log to a file.
+
+Default location of the file is in F</tmp>.
+
+Default: B<no>.
+
+Read-only.
+
+=head2 log_to_stdout
+
+A boolean that determines if the logger would log to STDOUT.
+
+Default: B<no>.
+
+=head2 log_to_stderr
+
+A boolean that determines if the logger would log to STDERR.
+
+Default: B<no>.
+
+=head2 log_file
+
+The leaf name for the log file.
+
+Default: B<undef>
+
+=head2 log_path
+
+The path for the log file.
+
+Default: B<undef>
+
+=head2 log_pid
+
+Whether to append the PID to the log filename.
+
+Default: B<yes>
+
+=head2 log_fail_fatal
+
+Whether failure to log is fatal.
+
+Default: B<yes>
+
+=head2 log_muted
+
+Whether only fatals are logged.
+
+Default: B<no>
+
+=head2 log_quiet_fatal
+
+From L<Log::Dispatchouli>:
+I<'stderr' or 'stdout' or an arrayref of zero, one, or both fatal log messages
+will not be logged to these>.
+
+Default: B<stderr>
+
+=head2 log_fields
+
+A hash of the fields definining how logging is being done.
+
+This is very useful when you want to propagate your logging onwards to another
+object which uses L<MooseX::Role::Loggable>.
+
+It will return the following attributes and their values in a hash: C<debug>,
+C<debug>, C<logger_facility>, C<logger_ident>, C<log_to_file>,
+C<log_to_stdout>, C<log_to_stderr>, C<log_file>, C<log_path>, C<log_pid>,
+C<log_fail_fatal>, C<log_muted>, C<log_quiet_fatal>.
+
+=head2 logger
+
+A L<Log::Dispatchouli> object.
+
+=head1 METHODS
+
+All methods here are imported from L<Log::Dispatchouli>. You can read its
+documentation to understand them better.
+
+=head2 log
+
+Log a message.
+
+=head2 log_debug
+
+Log a message only if in debug mode.
+
+=head2 log_fatal
+
+Log a message and die.
+
+=head2 set_debug
+
+Set the debug flag.
+
+=head2 clear_debug
+
+Clear the debug flag.
+
+=head2 set_prefix
+
+Set a prefix for all next messages.
+
+=head2 clear_prefix
+
+Clears the prefix for all next messages.
+
+=head2 set_muted
+
+Sets the mute property, which makes only fatal messages logged.
+
+=head2 clear_muted
+
+Clears the mute property.
+
+=head1 AUTHOR
+
+Sawyer X <xsawyerx@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2012 by Sawyer X.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
