@@ -1,3 +1,7 @@
+0.009   24.08.12
+        * GH #1: Allow Log::Dispatchouli::Proxy as well.
+          (thanks, Peter Shangov)
+
 0.008   22.07.12
         * Move to Moo instead of Any::Moose.
         * Require Sys::Syslog 0.25.
