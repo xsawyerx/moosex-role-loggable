@@ -1,3 +1,8 @@
+0.010   04.11.12
+        * No functional changes.
+        * Document a hard-to-debug situation.
+          (not a bug of MooseX::Role::Loggable)
+
 0.009   24.08.12
         * GH #1: Allow Log::Dispatchouli::Proxy as well.
           (thanks, Peter Shangov)
