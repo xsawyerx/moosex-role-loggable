@@ -1,3 +1,11 @@
+0.100   04.12.12
+        * Removing logger_ident. The logger_ident was set to the role name
+          instead of the object name. Still, even fixed, it means that we're
+          forcing the user to write to syslog without them specifying. Now you
+          need to set logger_ident yourself to write to syslog.
+        * Removing log_fields (just pass "logger" attribute instead).
+        * Documentation improvements.
+
 0.010   04.11.12
         * No functional changes.
         * Document a hard-to-debug situation.
