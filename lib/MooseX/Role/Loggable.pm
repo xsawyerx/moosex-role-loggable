@@ -22,9 +22,9 @@ has logger_facility => (
 );
 
 has logger_ident => (
-    is      => 'ro',
-    isa     => Str,
-    default => sub {__PACKAGE__},
+    is        => 'ro',
+    isa       => Str,
+    predicate => 'has_logger_ident',
 );
 
 has log_to_file => (
@@ -103,17 +103,20 @@ has logger => (
 sub _build_logger {
     my $self     = shift;
     my %optional = ();
+    my %options  = (
+        logger_ident => 'ident',
+        map { $_ => $_ } qw<log_file log_path>,
+    );
 
-    foreach my $option ( qw/log_file log_path/ ) {
+    foreach my $option ( keys %options ) {
         my $method = "has_$option";
         if ( $self->$method ) {
-            $optional{$option} = $self->$option;
+            $optional{ $options{$option} } = $self->$option;
         }
     }
 
     my $logger = Log::Dispatchouli->new( {
         debug       => $self->debug,
-        ident       => $self->logger_ident,
         facility    => $self->logger_facility,
         to_file     => $self->log_to_file,
         to_stdout   => $self->log_to_stdout,
@@ -207,9 +210,11 @@ Default: B<local6>.
 
 The ident the logger would use. This is useful for syslog.
 
-Default: B<MooseX::Role::Loggable>.
+Default: B<none>.
 
 Read-only.
+
+You should set this yourself if you want logging to syslog.
 
 =head2 log_to_file
 
