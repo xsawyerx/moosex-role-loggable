@@ -2,20 +2,20 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
-
-{
-    package Bar;
-    use Moo;
-    with 'MooseX::Role::Loggable';
-}
+use Test::More tests => 9;
 
 {
     package Foo;
     use Moo;
     with 'MooseX::Role::Loggable';
 
-    sub bar { Bar->new( shift->log_fields ) }
+    sub bar { Bar->new( logger => shift->logger ) }
+}
+
+{
+    package Bar;
+    use Moo;
+    with 'MooseX::Role::Loggable';
 }
 
 my $foo = Foo->new;
@@ -33,4 +33,5 @@ cmp_ok( $foo->debug, '==', 1, 'debug is now on in Foo' );
 $bar = $foo->bar;
 isa_ok( $bar, 'Bar' );
 cmp_ok( $bar->debug, '==', 1, 'debug is now on in Bar too' );
+cmp_ok( $bar->logger->debug, '==', 1, 'debug is now on in Bar too' );
 
