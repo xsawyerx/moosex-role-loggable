@@ -1,6 +1,7 @@
 0.100   04.12.12
         * Setting logger_ident to object name instead of role name.
-        * Removing log_fields (just pass "logger" attribute instead).
+        * Deprecating log_fields (just pass "logger" attribute instead).
+          It will be removed in the next version. Probably.
         * Documentation improvements.
 
 0.010   04.11.12
