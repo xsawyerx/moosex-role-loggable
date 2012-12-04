@@ -89,7 +89,7 @@ has logger => (
     is      => 'lazy',
     isa     => quote_sub(q{
         use Safe::Isa;
-        $_[0]->$_isa('Log::Dispatchouli')         ||
+        $_[0]->$_isa('Log::Dispatchouli')        ||
         $_[0]->$_isa('Log::Dispatchouli::Proxy')
             or die "$_[0] must be a Log::Dispatchouli object";
     }),
