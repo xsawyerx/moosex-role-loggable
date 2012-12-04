@@ -3,11 +3,24 @@ use warnings;
 package MooseX::Role::Loggable;
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
+use Carp;
+use Safe::Isa;
 use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Bool Str>;
 use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
 use namespace::autoclean;
+
+my %attr_meth_map = (
+    logger_facility => 'facility',
+    logger_ident    => 'ident',
+    log_to_file     => 'to_file',
+    log_to_stdout   => 'to_stdout',
+    log_to_stderr   => 'to_stderr',
+    log_fail_fatal  => 'fail_fatal',
+    log_muted       => 'muted',
+    log_quiet_fatal => 'quiet_fatal',
+);
 
 has debug => (
     is      => 'ro',
@@ -126,6 +139,37 @@ sub _build_logger {
     } );
 
     return $logger;
+}
+
+# if we already have a logger, use its values
+sub BUILDARGS {
+    my $class = shift;
+    my %args  = @_;
+    my @items = qw<
+        debug logger_facility logger_ident
+        log_to_file log_to_stdout log_to_stderr log_file log_path
+        log_pid log_fail_fatal log_muted log_quiet_fatal
+    >;
+
+    if ( exists $args{'logger'} ) {
+        $args{'logger'}->$_isa('Log::Dispatchouli')        ||
+        $args{'logger'}->$_isa('Log::Dispatchouli::Proxy')
+            or croak 'logger must be a Log::Dispatchouli object';
+
+        foreach my $item (@items) {
+            # if value is overridden, don't touch it
+            exists $args{$item} and next;
+
+            my $attr = exists $attr_meth_map{$item} ?
+                       $attr_meth_map{$item}        :
+                       $item;
+
+            exists $args{'logger'}{$attr}
+                and $args{$item} = $args{'logger'}{$attr};
+        }
+    }
+
+    return {%args};
 }
 
 1;
