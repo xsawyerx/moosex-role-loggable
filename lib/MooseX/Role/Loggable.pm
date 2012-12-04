@@ -22,9 +22,9 @@ has logger_facility => (
 );
 
 has logger_ident => (
-    is        => 'ro',
-    isa       => Str,
-    predicate => 'has_logger_ident',
+    is      => 'ro',
+    isa     => Str,
+    default => sub { ref shift },
 );
 
 has log_to_file => (
@@ -218,7 +218,7 @@ Default: B<local6>.
 
 The ident the logger would use. This is useful for syslog.
 
-Default: B<none>.
+Default: B<calling object's class name>.
 
 Read-only.
 
