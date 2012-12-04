@@ -131,17 +131,6 @@ sub _build_logger {
     return $logger;
 }
 
-sub log_fields {
-    my $self  = shift;
-    my @attrs = qw/
-        debug logger_facility logger_ident
-        log_to_file log_to_stdout log_to_stderr
-        log_file log_path log_pid log_fail_fatal log_muted log_quiet_fatal
-    /;
-
-    return map { $_ => $self->$_ } grep { defined $self->$_ } @attrs;
-};
-
 1;
 
 __END__
@@ -191,6 +180,10 @@ methods for logging defined automatically.
 This module uses L<Moo> so it takes as little resources as it can by default,
 and can seamlessly work if you're using either L<Moo> or L<Moose>.
 
+=head1 Propagating logging definitions
+
+Sometimes your objects create additional object which might want to log
+using the same settings. You can simply give them the same logger object.
 
     package Parent;
     use Moose;
@@ -205,7 +198,7 @@ and can seamlessly work if you're using either L<Moo> or L<Moose>.
 
     sub _build_child {
         my $self = shift;
-        return Child->new( $self->log_fields );
+        return Child->new( logger => $self->logger );
     }
 
 =head1 ATTRIBUTES
@@ -293,18 +286,6 @@ I<'stderr' or 'stdout' or an arrayref of zero, one, or both fatal log messages
 will not be logged to these>.
 
 Default: B<stderr>
-
-=head2 log_fields
-
-A hash of the fields definining how logging is being done.
-
-This is very useful when you want to propagate your logging onwards to another
-object which uses L<MooseX::Role::Loggable>.
-
-It will return the following attributes and their values in a hash: C<debug>,
-C<debug>, C<logger_facility>, C<logger_ident>, C<log_to_file>,
-C<log_to_stdout>, C<log_to_stderr>, C<log_file>, C<log_path>, C<log_pid>,
-C<log_fail_fatal>, C<log_muted>, C<log_quiet_fatal>.
 
 =head2 logger
 
