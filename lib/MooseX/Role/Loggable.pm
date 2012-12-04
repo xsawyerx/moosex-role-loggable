@@ -175,7 +175,7 @@ methods for logging defined automatically.
     }
 
 This module uses L<Moo> so it takes as little resources as it can by default,
-and can seamlessly work if you're using either L<Moo> or L<Moose>.
+and can seamlessly work with both L<Moo> or L<Moose>.
 
 =head1 Propagating logging definitions
 
