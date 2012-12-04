@@ -172,6 +172,13 @@ sub BUILDARGS {
     return {%args};
 }
 
+sub log_fields {
+    my $self = shift;
+    carp 'Calling ->log_fields() is deprecated, ' .
+         'it will be removed in the next version';
+    return ( logger => $self->logger );
+}
+
 1;
 
 __END__
