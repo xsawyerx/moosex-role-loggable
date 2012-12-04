@@ -33,5 +33,5 @@ cmp_ok( $foo->debug, '==', 1, 'debug is now on in Foo' );
 $bar = $foo->bar;
 isa_ok( $bar, 'Bar' );
 cmp_ok( $bar->debug, '==', 1, 'debug is now on in Bar too' );
-cmp_ok( $bar->logger->debug, '==', 1, 'debug is now on in Bar too' );
+cmp_ok( $bar->logger->debug, '==', 1, q{debug is now on in Bar's logger too} );
 
