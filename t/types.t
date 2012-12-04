@@ -38,7 +38,7 @@ is(
 
 like(
     exception { $class->new( logger => bless {}, 'BASDz7ad' ) },
-    qr/^isa check for "logger" failed: .* must be a Log::Dispatchouli object/,
+    qr/must be a Log::Dispatchouli object/,
     'Still cannot create class with bad logger',
 );
 
