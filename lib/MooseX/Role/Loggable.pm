@@ -165,15 +165,36 @@ __END__
 =head1 DESCRIPTION
 
 This is a role to provide logging ability to whoever consumes it using
-L<Log::Dispatchouli>. Once you consume this role, you have the attributes and
-methods documented below.
+L<Log::Dispatchouli>. Once you consume this role, you have attributes and
+methods for logging defined automatically.
 
-You can propagate your logging definitions to another object that uses
-L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
+    package MyObject;
+    use Moose # Moo works too
+    with 'MooseX::Role::Loggable';
+
+    sub run {
+        my $self = shift;
+
+        $self->log('Trying to do something');
+
+        # this only gets written if debug flag is on
+        $self->log_debug('Some debugging output');
+
+        $self->log(
+            { level => 'critical' },
+            'Critical log message',
+        );
+
+        $self->log_fatal('Log and die');
+    }
+
+This module uses L<Moo> so it takes as little resources as it can by default,
+and can seamlessly work if you're using either L<Moo> or L<Moose>.
+
 
     package Parent;
-    use Moo; # replaces Any::Moose and Mouse (and Moose)
-    use MooseX::Role::Loggable; # picking Moo or Moose
+    use Moose;
+    with 'MooseX::Role::Loggable';
 
     has child => (
         is      => 'ro',
@@ -186,9 +207,6 @@ L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
         my $self = shift;
         return Child->new( $self->log_fields );
     }
-
-This module uses L<Moo> so it takes as little resources as it can by default,
-and can seamlessly work if you're using either L<Moo> or L<Moose>.
 
 =head1 ATTRIBUTES
 
@@ -351,7 +369,7 @@ example:
 
     package Stuff;
 
-    use Moo; # or Moose
+    use Moose;
     with 'MooseX::Role::Logger';
 
     has db => (
