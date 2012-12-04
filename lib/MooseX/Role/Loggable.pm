@@ -378,6 +378,19 @@ Sets the mute property, which makes only fatal messages logged.
 
 Clears the mute property.
 
+=head2 BUILDARGS
+
+You shouldn't care about this. It takes care of propagating attributes
+from a given logger (if you provided one) to the attributes this role provides.
+
+=head2 log_fields
+
+B<DEPRECATED>.
+
+Please pass the logger attribute instead:
+
+    SomeObject->new( logger => $parent->logger );
+
 =head1 DEBUGGING
 
 Occassionally you might encounter the following error:
