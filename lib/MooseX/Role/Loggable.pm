@@ -158,14 +158,18 @@ sub BUILDARGS {
 
         foreach my $item (@items) {
             # if value is overridden, don't touch it
-            exists $args{$item} and next;
-
             my $attr = exists $attr_meth_map{$item} ?
                        $attr_meth_map{$item}        :
                        $item;
 
-            exists $args{'logger'}{$attr}
-                and $args{$item} = $args{'logger'}{$attr};
+            if ( exists $args{$item} ) {
+                # override logger configuration
+                $args{'logger'}{$attr} = $args{$item};
+            } else {
+                # override our attributes if it's in logger
+                exists $args{'logger'}{$attr}
+                    and $args{$item} = $args{'logger'}{$attr};
+            }
         }
     }
 
