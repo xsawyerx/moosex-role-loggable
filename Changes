@@ -1,3 +1,6 @@
+0.101   05.12.12
+        * Log deprecation warning as well.
+
 0.100   04.12.12
         * Setting logger_ident to object name instead of role name.
         * Deprecating log_fields (just pass "logger" attribute instead).
