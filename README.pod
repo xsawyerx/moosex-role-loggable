@@ -6,7 +6,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.110
+version 0.111
 
 =head1 SYNOPSIS
 
