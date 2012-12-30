@@ -1,3 +1,8 @@
+0.112   30.12.12
+        * Use namespace::sweep instead of namespace::autoclean. The latter
+          brings up Class::MOP, which is clearly unnecessary here.
+        * Fix some override in tests to help out perl 5.8.8.
+
 0.111   29.12.12
         * 100% testing coverage.
 
