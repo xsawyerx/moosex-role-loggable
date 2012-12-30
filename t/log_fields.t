@@ -5,7 +5,7 @@ use warnings;
 use Test::More tests => 9;
 
 # catching carp()
-$SIG{'__WARN__'} = sub {
+local $SIG{'__WARN__'} = sub {
     my $msg = shift;
     ::like(
         $msg,
