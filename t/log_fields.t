@@ -4,6 +4,16 @@ use warnings;
 
 use Test::More tests => 9;
 
+# catching carp()
+$SIG{'__WARN__'} = sub {
+    my $msg = shift;
+    ::like(
+        $msg,
+        qr/\Qlog_fields() is deprecated\E/,
+        'Correct dep warning to carp',
+    );
+};
+
 {
     package Foo;
     use Moo;
@@ -21,18 +31,6 @@ use Test::More tests => 9;
         );
     }
 
-    # override carp()
-    {
-        no warnings qw<redefine once>;
-        *MooseX::Role::Loggable::carp = sub {
-            my $msg = shift;
-            ::like(
-                $msg,
-                qr/\Qlog_fields() is deprecated\E/,
-                'Correct dep warning to carp',
-            );
-        };
-    }
 }
 
 my $foo = Foo->new();
