@@ -9,7 +9,7 @@ use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Bool Str>;
 use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
-use namespace::autoclean;
+use namespace::sweep;
 
 my %attr_meth_map = (
     logger_facility => 'facility',
