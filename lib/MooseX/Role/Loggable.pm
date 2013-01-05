@@ -408,8 +408,8 @@ Occassionally you might encounter the following error:
 
 The problem does not stem from L<MooseX::Role::Loggable>, but from a builder
 calling a logging method before the logger is built. Since L<Moo> and L<Moose>
-do not assure order of building attributes, which means that some attributes
-might not exist by the time you need them.
+do not assure order of building attributes, some attributes might not yet
+exist by the time you need them.
 
 This specific error happens when the C<ident> attribute isn't built by the
 time a builder runs. In order to avoid it, the attribute which uses the builder
