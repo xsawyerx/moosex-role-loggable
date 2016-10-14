@@ -1,9 +1,11 @@
-use strict;
-use warnings;
 package MooseX::Role::Loggable;
+
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
-use Carp;
+use strict;
+use warnings;
+
+use Carp ();
 use Safe::Isa;
 use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Bool Str>;
@@ -12,131 +14,139 @@ use Log::Dispatchouli;
 use namespace::sweep;
 
 my %attr_meth_map = (
-    logger_facility => 'facility',
-    logger_ident    => 'ident',
-    log_to_file     => 'to_file',
-    log_to_stdout   => 'to_stdout',
-    log_to_stderr   => 'to_stderr',
-    log_fail_fatal  => 'fail_fatal',
-    log_muted       => 'muted',
-    log_quiet_fatal => 'quiet_fatal',
+    'logger_facility' => 'facility',
+    'logger_ident'    => 'ident',
+    'log_to_file'     => 'to_file',
+    'log_to_stdout'   => 'to_stdout',
+    'log_to_stderr'   => 'to_stderr',
+    'log_fail_fatal'  => 'fail_fatal',
+    'log_muted'       => 'muted',
+    'log_quiet_fatal' => 'quiet_fatal',
 );
 
-has debug => (
-    is      => 'ro',
-    isa     => Bool,
-    default => sub {0},
+has 'debug' => (
+    'is'      => 'ro',
+    'isa'     => Bool,
+    'default' => sub {0},
 );
 
-has logger_facility => (
-    is      => 'ro',
-    isa     => Str,
-    default => sub {'local6'},
+has 'logger_facility' => (
+    'is'      => 'ro',
+    'isa'     => Str,
+    'default' => sub {'local6'},
 );
 
-has logger_ident => (
-    is      => 'ro',
-    isa     => Str,
-    default => sub { ref shift },
+has 'logger_ident' => (
+    'is'      => 'ro',
+    'isa'     => Str,
+    'default' => sub { ref shift },
 );
 
-has log_to_file => (
-    is      => 'ro',
-    isa     => Bool,
-    default => sub {0},
+has 'log_to_file' => (
+    'is'      => 'ro',
+    'isa'     => Bool,
+    'default' => sub {0},
 );
 
-has log_to_stdout => (
-    is      => 'ro',
-    isa     => Bool,
-    default => sub {0},
+has 'log_to_stdout' => (
+    'is'      => 'ro',
+    'isa'     => Bool,
+    'default' => sub {0},
 );
 
-has log_to_stderr => (
-    is      => 'ro',
-    isa     => Bool,
-    default => sub {0},
+has 'log_to_stderr' => (
+    'is'      => 'ro',
+    'isa'     => Bool,
+    'default' => sub {0},
 );
 
-has log_file => (
-    is        => 'ro',
-    isa       => Str,
-    predicate => 'has_log_file',
+has 'log_file' => (
+    'is'        => 'ro',
+    'isa'       => Str,
+    'predicate' => 'has_log_file',
 );
 
-has log_path => (
-    is        => 'ro',
-    isa       => Str,
-    predicate => 'has_log_path',
+has 'log_path' => (
+    'is'        => 'ro',
+    'isa'       => Str,
+    'predicate' => 'has_log_path',
 );
 
-has log_pid => (
-    is      => 'ro',
-    isa     => Bool,
-    default => sub {1},
+has 'log_pid' => (
+    'is'      => 'ro',
+    'isa'     => Bool,
+    'default' => sub {1},
 );
 
-has log_fail_fatal => (
-    is      => 'ro',
-    isa     => Bool,
-    default => sub {1},
+has 'log_fail_fatal' => (
+    'is'      => 'ro',
+    'isa'     => Bool,
+    'default' => sub {1},
 );
 
-has log_muted => (
-    is      => 'ro',
-    isa     => Bool,
-    default => sub {0},
+has 'log_muted' => (
+    'is'      => 'ro',
+    'isa'     => Bool,
+    'default' => sub {0},
 );
 
-has log_quiet_fatal => (
-    is      => 'ro',
-    isa     => quote_sub(q{
+has 'log_quiet_fatal' => (
+    'is'  => 'ro',
+    'isa' => quote_sub(
+        q{
         use Safe::Isa;
         $_[0] || $_[0]->$_isa( ref [] )
             or die "$_[0] must be a string or arrayref"
-    }),
-    default => sub {'stderr'},
+    }
+    ),
+    'default' => sub {'stderr'},
 );
 
-has logger => (
-    is      => 'lazy',
-    isa     => quote_sub(q{
+has 'logger' => (
+    'is'  => 'lazy',
+    'isa' => quote_sub(
+        q{
         use Safe::Isa;
         $_[0]->$_isa('Log::Dispatchouli')        ||
         $_[0]->$_isa('Log::Dispatchouli::Proxy')
             or die "$_[0] must be a Log::Dispatchouli object";
-    }),
+    }
+    ),
 
-    handles => [ qw/
-        log log_fatal log_debug
-        set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
-    / ],
+    'handles' => [
+        qw/
+            log log_fatal log_debug
+            set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
+            /
+    ],
 );
 
 sub _build_logger {
-    my $self     = shift;
-    my %optional = ();
+    my $self = shift;
+    my %optional;
 
-    foreach my $option ( qw<log_file log_path> ) {
+    foreach my $option (qw<log_file log_path>) {
         my $method = "has_$option";
         if ( $self->$method ) {
             $optional{$option} = $self->$option;
         }
     }
 
-    my $logger = Log::Dispatchouli->new( {
-        debug       => $self->debug,
-        ident       => $self->logger_ident,
-        facility    => $self->logger_facility,
-        to_file     => $self->log_to_file,
-        to_stdout   => $self->log_to_stdout,
-        to_stderr   => $self->log_to_stderr,
-        log_pid     => $self->log_pid,
-        fail_fatal  => $self->log_fail_fatal,
-        muted       => $self->log_muted,
-        quiet_fatal => $self->log_quiet_fatal,
-        %optional,
-    } );
+    my $logger = Log::Dispatchouli->new(
+        {
+            'debug'       => $self->debug,
+            'ident'       => $self->logger_ident,
+            'facility'    => $self->logger_facility,
+            'to_file'     => $self->log_to_file,
+            'to_stdout'   => $self->log_to_stdout,
+            'to_stderr'   => $self->log_to_stderr,
+            'log_pid'     => $self->log_pid,
+            'fail_fatal'  => $self->log_fail_fatal,
+            'muted'       => $self->log_muted,
+            'quiet_fatal' => $self->log_quiet_fatal,
+            %optional,
+        }
+    );
 
     return $logger;
 }
@@ -152,20 +162,24 @@ sub BUILDARGS {
     >;
 
     if ( exists $args{'logger'} ) {
-        $args{'logger'}->$_isa('Log::Dispatchouli')        ||
-        $args{'logger'}->$_isa('Log::Dispatchouli::Proxy')
-            or croak 'logger must be a Log::Dispatchouli object';
+        $args{'logger'}->$_isa('Log::Dispatchouli')
+            || $args{'logger'}->$_isa('Log::Dispatchouli::Proxy')
+            or Carp::croak('logger must be a Log::Dispatchouli object');
 
         foreach my $item (@items) {
+
             # if value is overridden, don't touch it
-            my $attr = exists $attr_meth_map{$item} ?
-                       $attr_meth_map{$item}        :
-                       $item;
+            my $attr
+                = exists $attr_meth_map{$item}
+                ? $attr_meth_map{$item}
+                : $item;
 
             if ( exists $args{$item} ) {
+
                 # override logger configuration
                 $args{'logger'}{$attr} = $args{$item};
             } else {
+
                 # override our attributes if it's in logger
                 exists $args{'logger'}{$attr}
                     and $args{$item} = $args{'logger'}{$attr};
@@ -177,15 +191,15 @@ sub BUILDARGS {
 }
 
 sub log_fields {
-    my $self    = shift;
-    my $warning =
-        '[MooseX::Role::Loggable] Calling ->log_fields() is deprecated, ' .
-        'it will be removed in the next version';
+    my $self = shift;
+    my $warning
+        = '[MooseX::Role::Loggable] Calling ->log_fields() is deprecated, '
+        . 'it will be removed in the next version';
 
-    $self->log( { level => 'warning' }, $warning );
-    carp $warning;
+    $self->log( { 'level' => 'warning' }, $warning );
+    Carp::carp($warning);
 
-    return ( logger => $self->logger );
+    return ( 'logger' => $self->logger );
 }
 
 1;
@@ -441,4 +455,3 @@ example:
 This makes the C<db> attribute non-lazy, but during run-time. This will assure
 that all the logging attributes are created B<before> you build the C<db>
 attribute and call C<log_debug>.
-

@@ -1,12 +1,14 @@
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatchouli
 
 =head1 VERSION
 
-version 0.112
+version 0.113
 
 =head1 SYNOPSIS
 
@@ -224,8 +226,8 @@ Occassionally you might encounter the following error:
 
 The problem does not stem from L<MooseX::Role::Loggable>, but from a builder
 calling a logging method before the logger is built. Since L<Moo> and L<Moose>
-do not assure order of building attributes, which means that some attributes
-might not exist by the time you need them.
+do not assure order of building attributes, some attributes might not yet
+exist by the time you need them.
 
 This specific error happens when the C<ident> attribute isn't built by the
 time a builder runs. In order to avoid it, the attribute which uses the builder
@@ -264,8 +266,9 @@ Sawyer X <xsawyerx@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Sawyer X.
+This software is copyright (c) 2016 by Sawyer X.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
+=cut

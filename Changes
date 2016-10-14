@@ -1,3 +1,7 @@
+0.113   14.10.16
+        * Provide a META.json file.
+        * Removed some duplication in resources in metadata.
+
 0.112   30.12.12
         * Use namespace::sweep instead of namespace::autoclean. The latter
           brings up Class::MOP, which is clearly unnecessary here.
