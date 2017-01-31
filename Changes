@@ -1,3 +1,6 @@
+
+        * switch back to the more-maintained namespace::autoclean.
+
 0.113   14.10.16
         * Provide a META.json file.
         * Removed some duplication in resources in metadata.
