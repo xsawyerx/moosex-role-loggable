@@ -11,7 +11,7 @@ use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Bool Str>;
 use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
-use namespace::sweep;
+use namespace::autoclean;
 
 my %attr_meth_map = (
     'logger_facility' => 'facility',
