@@ -365,6 +365,14 @@ A L<Log::Dispatchouli> object.
 All methods here are imported from L<Log::Dispatchouli>. You can read its
 documentation to understand them better.
 
+=head2 has_log_file
+
+Determines if C<log_file> was specified.
+
+=head2 has_log_path
+
+Determines if C<log_path> was specified.
+
 =head2 log
 
 Log a message.
