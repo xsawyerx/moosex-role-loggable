@@ -1,5 +1,7 @@
 
-        * switch back to the more-maintained namespace::autoclean.
+        * GH #2: Switch back to the more-maintained namespace::autoclean.
+          (Karen Etheridge)
+        * GH #5: Do not ship with Build.PL.
 
 0.113   14.10.16
         * Provide a META.json file.
